@@ -46,31 +46,7 @@ export default function App() {
     setIsSignUpModalOpen(true);
   }, []);
 
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    try {
-      const saved = localStorage.getItem('rt_map_theme');
-      return (saved as 'light' | 'dark') || 'light';
-    } catch {
-      return 'light';
-    }
-  });
 
-  const handleToggleTheme = useCallback(() => {
-    setTheme(prev => {
-      const next = prev === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('rt_map_theme', next);
-      return next;
-    });
-  }, []);
-
-  // Sync dark class on the HTML document element
-  useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [theme]);
 
   // Fetch a single profile from the database
   const fetchProfile = useCallback(async (userId: string) => {
@@ -416,20 +392,20 @@ export default function App() {
   // 3. Simulated multiplayer loop disabled - only real users are shown
 
   return (
-    <div className="flex flex-col min-h-screen frosted-glass-bg text-slate-800 dark:text-slate-100 font-sans antialiased overflow-x-hidden relative transition-colors duration-300">
+    <div className="flex flex-col min-h-screen frosted-glass-bg text-slate-800 font-sans antialiased overflow-x-hidden relative">
       
       {/* Ambient background glowing elements to capture the Frosted Glass essence */}
-      <div className="absolute top-[120px] left-[15%] w-72 h-72 bg-blue-300/20 dark:bg-blue-600/10 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-[80px] right-[10%] w-[450px] h-[350px] bg-indigo-300/15 dark:bg-indigo-600/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute top-[50%] left-[45%] w-64 h-64 bg-emerald-300/10 dark:bg-emerald-600/5 rounded-full blur-[110px] pointer-events-none" />
+      <div className="absolute top-[120px] left-[15%] w-72 h-72 bg-blue-300/20 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[80px] right-[10%] w-[450px] h-[350px] bg-indigo-300/15 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-[50%] left-[45%] w-64 h-64 bg-emerald-300/10 rounded-full blur-[110px] pointer-events-none" />
 
       {/* 1. Sticky Glass Header */}
-      <header id="app-header" className="sticky top-0 z-[1000] bg-white/45 dark:bg-slate-900/60 border-b border-slate-200/50 dark:border-white/5 backdrop-blur-xl px-4 py-3 md:px-8 flex items-center justify-between shadow-sm transition-all">
+      <header id="app-header" className="sticky top-0 z-[1000] bg-white/45 border-b border-slate-200/50 backdrop-blur-xl px-4 py-3 md:px-8 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-2.5">
           <div className="p-2 bg-gradient-to-tr from-indigo-500 to-indigo-400 rounded-xl shadow-md flex items-center justify-center">
             <Globe className="w-5 h-5 text-slate-950 animate-spin-slow" />
           </div>
-          <h1 className="text-base font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5 leading-tight md:text-lg font-roboto">
+          <h1 className="text-base font-black tracking-tight text-slate-900 flex items-center gap-1.5 leading-tight md:text-lg font-roboto">
             Glapme
           </h1>
         </div>
@@ -438,17 +414,17 @@ export default function App() {
         <div className="flex items-center gap-3 md:gap-4">
 
 
-          <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-medium font-mono">
-            <Users className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500" />
-            <span>Total: <span className="font-extrabold text-slate-700 dark:text-slate-200">{users.length}</span> pins</span>
+          <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-500 font-medium font-mono">
+            <Users className="w-3.5 h-3.5 text-zinc-400" />
+            <span>Total: <span className="font-extrabold text-slate-700">{users.length}</span> pins</span>
           </div>
 
-          <div className="h-4 w-px bg-slate-200 dark:bg-slate-800"></div>
+          <div className="h-4 w-px bg-slate-200"></div>
 
           {!currentUser ? (
             <button
               onClick={() => setIsSignUpModalOpen(true)}
-              className="flex items-center gap-1.5 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold shadow transition-all cursor-pointer select-none"
+              className="flex items-center gap-1.5 bg-blue-700 hover:bg-blue-800 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold shadow transition-all cursor-pointer select-none"
             >
               <UserPlus className="w-3.5 h-3.5" />
               Sign Up
@@ -457,14 +433,14 @@ export default function App() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsSignUpModalOpen(true)}
-                className="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm transition-all cursor-pointer select-none"
+                className="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-800 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm transition-all cursor-pointer select-none"
               >
                 {currentUser.avatarUrl ? (
-                  <div className="w-5 h-5 rounded-full overflow-hidden border border-slate-350 dark:border-slate-650 flex-shrink-0">
+                  <div className="w-5 h-5 rounded-full overflow-hidden border border-slate-300 flex-shrink-0">
                     <img src={currentUser.avatarUrl} alt={currentUser.username} className="w-full h-full object-cover" />
                   </div>
                 ) : (
-                  <div className="w-5 h-5 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center flex-shrink-0 text-slate-500 dark:text-slate-400">
+                  <div className="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center flex-shrink-0 text-slate-500">
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                     </svg>
@@ -474,7 +450,7 @@ export default function App() {
               </button>
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-1.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 px-2.5 py-1 rounded-lg text-xs font-bold shadow transition-all cursor-pointer"
+                className="flex items-center gap-1.5 bg-gray-200 hover:bg-gray-300 text-gray-800 px-2.5 py-1 rounded-lg text-xs font-bold shadow transition-all cursor-pointer"
               >
                 Logout
               </button>
@@ -497,13 +473,11 @@ export default function App() {
             isSelectMode={isSelectMode}
             mapCenter={[22.0, 15.0]} // Gorgeous centered view representation
             onUserWave={handleWaveAtUser}
-            theme={theme}
-            onToggleTheme={handleToggleTheme}
           />
 
           {/* Selected User Floating Details Card */}
           {selectedUser && (
-            <div className="absolute bottom-6 left-6 z-[999] w-[calc(100%-3rem)] sm:w-80 md:w-96 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-5 shadow-2xl animate-in slide-in-from-bottom-5 duration-300">
+            <div className="absolute bottom-6 left-6 z-[999] w-[calc(100%-3rem)] sm:w-80 md:w-96 overflow-hidden rounded-2xl border border-slate-200 bg-white/90 backdrop-blur-md p-5 shadow-2xl animate-in slide-in-from-bottom-5 duration-300">
               {/* Highlight top banner color relative to role */}
               <div 
                 className="absolute top-0 inset-x-0 h-1.5 opacity-80" 
@@ -517,17 +491,17 @@ export default function App() {
                       <img src={selectedUser.avatarUrl} alt={selectedUser.username} className="w-full h-full object-cover" />
                     </div>
                   ) : (
-                    <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center border border-slate-200 dark:border-slate-700 flex-shrink-0 shadow-sm mt-1">
-                      <svg className="w-6 h-6 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                    <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200 flex-shrink-0 shadow-sm mt-1">
+                      <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                       </svg>
                     </div>
                   )}
                   <div>
-                    <h4 className="font-extrabold text-slate-900 dark:text-slate-100 text-sm leading-tight flex items-center gap-1.5 flex-wrap">
+                    <h4 className="font-extrabold text-slate-900 text-sm leading-tight flex items-center gap-1.5 flex-wrap">
                       @{selectedUser.username}
                       {selectedUser.isSelf && (
-                        <span className="text-[8px] px-1.5 py-0.5 rounded bg-indigo-650 dark:bg-amber-450 text-white dark:text-slate-950 font-black tracking-wide leading-none select-none">
+                        <span className="text-[8px] px-1.5 py-0.5 rounded bg-indigo-600 text-white font-black tracking-wide leading-none select-none">
                           YOU
                         </span>
                       )}
@@ -535,7 +509,7 @@ export default function App() {
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                       ) : null}
                     </h4>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold font-mono">
+                    <p className="text-[10px] text-slate-500 font-semibold font-mono">
                       📍 Lat: {selectedUser.lat.toFixed(4)}, Lng: {selectedUser.lng.toFixed(4)}
                     </p>
                   </div>
@@ -543,22 +517,22 @@ export default function App() {
                 
                 <button
                   onClick={() => setSelectedUser(null)}
-                  className="text-[10px] text-slate-500 hover:text-slate-800 dark:text-zinc-405 dark:hover:text-slate-200 transition-colors bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-2.5 py-1 rounded-lg cursor-pointer border border-slate-200 dark:border-slate-700 shadow-sm font-bold"
+                  className="text-[10px] text-slate-500 hover:text-slate-800 transition-colors bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-lg cursor-pointer border border-slate-200 shadow-sm font-bold"
                 >
                   Close
                 </button>
               </div>
 
-              <div className="p-3 bg-slate-50 dark:bg-slate-950/80 rounded-xl border border-slate-150 dark:border-slate-850 mb-4">
-                <span className="text-[9px] uppercase tracking-wider font-extrabold text-slate-450 dark:text-slate-500 block mb-0.5 font-mono">ABOUT THE PINNER</span>
-                <p className="text-xs text-slate-700 dark:text-slate-200 italic leading-relaxed font-semibold">
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-150 mb-4">
+                <span className="text-[9px] uppercase tracking-wider font-extrabold text-slate-450 block mb-0.5 font-mono">ABOUT THE PINNER</span>
+                <p className="text-xs text-slate-700 italic leading-relaxed font-semibold">
                   "{selectedUser.bio}"
                 </p>
                 <div className="flex gap-2 items-center mt-2.5">
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${CATEGORY_DETAILS[selectedUser.role].bg} ${CATEGORY_DETAILS[selectedUser.role].color}`}>
                     {CATEGORY_DETAILS[selectedUser.role].label}
                   </span>
-                  <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono font-medium">⏱️ {new Date(selectedUser.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                  <span className="text-[10px] text-slate-400 font-mono font-medium">⏱️ {new Date(selectedUser.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                 </div>
               </div>
 
@@ -567,17 +541,17 @@ export default function App() {
                 <button
                   disabled={selectedUser.isSelf}
                   onClick={() => handleWaveAtUser(selectedUser.id)}
-                  className="py-2.5 px-3 rounded-xl bg-indigo-550/5 dark:bg-indigo-550/10 border border-indigo-200/50 dark:border-indigo-500/20 hover:border-indigo-400/50 hover:bg-indigo-100/50 dark:hover:bg-indigo-500/20 text-indigo-700 dark:text-indigo-350 hover:text-indigo-900 dark:hover:text-indigo-200 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-40 disabled:pointer-events-none shadow-sm"
+                  className="py-2.5 px-3 rounded-xl bg-indigo-50 border border-indigo-200/50 hover:border-indigo-400/50 hover:bg-indigo-100 text-indigo-700 hover:text-indigo-900 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-40 disabled:pointer-events-none shadow-sm"
                 >
-                  <Waves className="w-4 h-4 animate-wave text-indigo-650 dark:text-indigo-400" />
+                  <Waves className="w-4 h-4 animate-wave text-indigo-600" />
                   Wave Hello
                 </button>
                 <button
                   disabled={selectedUser.isSelf}
                   onClick={() => handleLikeUser(selectedUser.id)}
-                  className="py-2.5 px-3 rounded-xl bg-rose-550/5 dark:bg-rose-550/10 border border-rose-200/50 dark:border-rose-500/20 hover:border-rose-450 hover:bg-rose-100/50 dark:hover:bg-rose-500/20 text-rose-700 dark:text-rose-355 hover:text-rose-900 dark:hover:text-rose-200 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-40 disabled:pointer-events-none group shadow-sm"
+                  className="py-2.5 px-3 rounded-xl bg-rose-50 border border-rose-200/50 hover:border-rose-400 hover:bg-rose-100 text-rose-700 hover:text-rose-900 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-40 disabled:pointer-events-none group shadow-sm"
                 >
-                  <Heart className="w-4 h-4 text-rose-600 dark:text-rose-500 transition-transform group-hover:scale-125" />
+                  <Heart className="w-4 h-4 text-rose-600 transition-transform group-hover:scale-125" />
                   <span>{selectedUser.likes}</span> Likes
                 </button>
               </div>
@@ -591,16 +565,16 @@ export default function App() {
         <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4">
           {/* Backdrop */}
           <div 
-            className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm transition-opacity animate-in fade-in duration-200" 
+            className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity animate-in fade-in duration-200" 
             onClick={() => setIsSignUpModalOpen(false)}
           />
           
           {/* Modal Card */}
-          <div className="relative w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 overflow-hidden animate-in fade-in zoom-in-95 duration-200 z-10">
+          <div className="relative w-full max-w-md bg-white border border-slate-200 rounded-2xl shadow-2xl p-6 overflow-hidden animate-in fade-in zoom-in-95 duration-200 z-10">
             {/* Close Button */}
             <button
               onClick={() => setIsSignUpModalOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-205 transition-colors p-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-md hover:bg-slate-100 cursor-pointer"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

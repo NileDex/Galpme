@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import { MapUser, UserCategory } from '../types';
 import { CATEGORY_DETAILS } from '../mockData';
-import { Crosshair, Navigation, Sun, Moon, Info } from 'lucide-react';
+import { Crosshair, Navigation, Info } from 'lucide-react';
 
 interface MapComponentProps {
   users: MapUser[];
@@ -18,8 +18,6 @@ interface MapComponentProps {
   isSelectMode: boolean;
   mapCenter: [number, number];
   onUserWave?: (userId: string) => void;
-  theme: 'light' | 'dark';
-  onToggleTheme: () => void;
 }
 
 export default function MapComponent({
@@ -31,8 +29,6 @@ export default function MapComponent({
   isSelectMode,
   mapCenter,
   onUserWave,
-  theme,
-  onToggleTheme,
 }: MapComponentProps) {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -92,13 +88,8 @@ export default function MapComponent({
     L.control.zoom({ position: 'bottomright' }).addTo(map);
 
     // Initial tile layers setting (CartoDB Positron/Dark Matter for high reliability)
-    const baseLayerUrl = theme === 'dark'
-      ? 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png'
-      : 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png';
-
-    const refLayerUrl = theme === 'dark'
-      ? 'https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png'
-      : 'https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png';
+    const baseLayerUrl = 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png';
+    const refLayerUrl = 'https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png';
 
     // Enforce world bounds strictly (prevents panning beyond edges)
     map.setMaxBounds(maxBounds);
@@ -138,21 +129,7 @@ export default function MapComponent({
     };
   }, []);
 
-  // 2. Core theme toggle implementation
-  useEffect(() => {
-    if (!mapRef.current || !baseTileLayer || !refTileLayer) return;
-
-    const baseLayerUrl = theme === 'dark'
-      ? 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png'
-      : 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png';
-
-    const refLayerUrl = theme === 'dark'
-      ? 'https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png'
-      : 'https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png';
-
-    baseTileLayer.setUrl(baseLayerUrl);
-    refTileLayer.setUrl(refLayerUrl);
-  }, [theme, baseTileLayer, refTileLayer]);
+  // 2. Theme is always light - no tile switching needed
 
   // 3. User markers synchronization
   useEffect(() => {
@@ -185,8 +162,8 @@ export default function MapComponent({
 
       const color = colorMap[user.role] || '#64748b';
       const borderCSS = user.isSelf
-        ? 'border-yellow-400 bg-amber-50 dark:bg-slate-900 shadow-yellow-500/50'
-        : 'border-[2.5px] bg-white dark:bg-slate-950 shadow-md';
+        ? 'border-yellow-400 bg-amber-50 shadow-yellow-500/50'
+        : 'border-[2.5px] bg-white shadow-md';
 
       return L.divIcon({
         className: 'custom-user-marker',
@@ -207,7 +184,7 @@ export default function MapComponent({
             </div>
 
             <!-- Tiny Online Badge -->
-            <div class="absolute top-1 right-1 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-slate-950 ${user.isOnline ? 'bg-emerald-450' : 'bg-slate-400'}" style="background-color: ${user.isOnline ? '#10b981' : '#94a3b8'};"></div>
+            <div class="absolute top-1 right-1 w-3.5 h-3.5 rounded-full border-2 border-white ${user.isOnline ? 'bg-emerald-450' : 'bg-slate-400'}" style="background-color: ${user.isOnline ? '#10b981' : '#94a3b8'};"></div>
           </div>
         `,
         iconSize: [44, 44],
@@ -248,20 +225,20 @@ export default function MapComponent({
                 <img src="${user.avatarUrl}" alt="${user.username}" class="w-full h-full object-cover" />
               </div>
             ` : `
-              <div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200/60 flex items-center justify-center flex-shrink-0">
+              <div class="w-8 h-8 rounded-full bg-slate-100 border border-slate-200/60 flex items-center justify-center flex-shrink-0">
                 <svg class="w-4 h-4 text-slate-400" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                 </svg>
               </div>
             `}
             <div>
-              <p class="font-extrabold text-xs text-slate-800 dark:text-white leading-tight">@${user.username}</p>
-              <span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-900/60 text-slate-600 dark:text-slate-300 font-bold inline-block">
+              <p class="font-extrabold text-xs text-slate-800 leading-tight">@${user.username}</p>
+              <span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-bold inline-block">
                 ${details.label}
               </span>
             </div>
           </div>
-          <p class="text-[10px] text-slate-600 dark:text-slate-350 line-clamp-2 italic leading-relaxed">"${user.bio}"</p>
+          <p class="text-[10px] text-slate-600 line-clamp-2 italic leading-relaxed">"${user.bio}"</p>
         </div>
       `;
       markersRef.current[user.id].bindPopup(popupContent, {
@@ -407,26 +384,11 @@ export default function MapComponent({
 
       {/* Floating Interactive Elements Overlay */}
       <div className="absolute top-4 right-4 z-[999] flex flex-col gap-2">
-        {/* Skin Selector */}
-        <button
-          onClick={onToggleTheme}
-          className="p-3 bg-white/75 dark:bg-slate-900/90 border border-slate-200 dark:border-white/10 backdrop-blur-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 hover:text-black dark:hover:text-white rounded-xl shadow-xl transition-all cursor-pointer flex items-center justify-center"
-          title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Map`}
-          id="btn-map-theme"
-          type="button"
-        >
-          {theme === 'dark' ? (
-            <Sun className="w-5 h-5 text-amber-500 animate-pulse" />
-          ) : (
-            <Moon className="w-5 h-5 text-indigo-600" />
-          )}
-        </button>
-
         {/* Locate Me Trigger */}
         <button
           onClick={handleLocateMe}
           disabled={isLocating}
-          className={`p-3 bg-white/75 dark:bg-slate-900/90 border border-slate-200 dark:border-white/10 backdrop-blur-md hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl shadow-xl transition-all cursor-pointer flex items-center justify-center ${isLocating ? 'animate-pulse text-zinc-500' : 'text-slate-800 dark:text-slate-100 hover:text-black dark:hover:text-white'}`}
+          className={`p-3 bg-white/75 border border-slate-200 backdrop-blur-md hover:bg-slate-100 rounded-xl shadow-xl transition-all cursor-pointer flex items-center justify-center ${isLocating ? 'animate-pulse text-zinc-500' : 'text-slate-800 hover:text-black'}`}
           title="Zoom to My Geolocation"
           id="btn-locate-me"
           type="button"
