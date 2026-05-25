@@ -1,0 +1,6 @@
+{
+  "name": "Real-time Map Pinboard",
+  "description": "Pin your location, meet users across the globe, and see active people on an interactive Leaflet map in real-time.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
