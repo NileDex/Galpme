@@ -213,5 +213,5 @@ html, body, #root {margin:0;padding:0;width:100%;height:100%;overflow:hidden;}
   top: 0 !important;
 } 
 /* Full-screen map container */
-.map-section {position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; z-index: -1; background: #f8fafc;}
-.dark .map-section {background: #020617;}
+.map-section {position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; z-index: -1; background: transparent;}
+.dark .map-section {background: transparent;}
